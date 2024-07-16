@@ -1,8 +1,14 @@
 import { SenderType } from "@/app/enums/sender.type"
 import Image from "next/image"
 
-export default function Message(props: {messageFrom: SenderType, message:string}){
-    const {messageFrom, message} = props
+type MessagePropsType = {
+    messageFrom: SenderType
+    message: string 
+    isFileAttached?: boolean
+}
+
+export default function Message(props: MessagePropsType){
+    const {messageFrom, message, isFileAttached = false} = props
     return(
         <div className={['flex items-end', messageFrom  === SenderType.Bot ? '' : 'justify-end'].join(' ')}>
             <div 

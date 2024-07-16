@@ -1,17 +1,19 @@
 import { SenderType } from "@/app/enums/sender.type";
 import { IChat } from "@/app/models/chat.interface";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+import Attachment from "../attachment";
 
 type InputBoxPropsType ={
     sendMessage: (message: IChat)=> void
     selectedFile: File | undefined
     setSelectedFile: Dispatch<SetStateAction<File | undefined>>
+    uploadFile: (file: File) => Promise<boolean | AxiosResponse<any, any>>
 }
 
 export default function InputBox(props: InputBoxPropsType){
-    const { sendMessage, setSelectedFile, selectedFile } = props
+    const { sendMessage, setSelectedFile, selectedFile, uploadFile } = props
     const [userInput, setUserInput] = useState<string>('')
     const elementRef = useRef<HTMLInputElement>(null);
     
@@ -50,17 +52,6 @@ export default function InputBox(props: InputBoxPropsType){
        return `gs://synsugar-chatbot-storage/${fileName.replaceAll(' ','-').toLowerCase()}`
     }
 
-    async function uploadFile(file: File){
-        if(file !== undefined){
-            const formData = new FormData();
-            formData.append("file", file);
-            const fileUpdateResponse = await axios.post("/api/storage", formData, {headers: { "Content-type": "multipart/form-data" }});
-            return fileUpdateResponse
-        }
-        return false
-        
-    }
-
     return(
         <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
         <div className="relative flex">
@@ -75,6 +66,7 @@ export default function InputBox(props: InputBoxPropsType){
                 className="text-md w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-16 bg-gray-100 border-2 border-gray-200 focus:border-blue-500 rounded-full py-2" 
             />
             <div className="absolute right-2 items-center inset-y-0 hidden sm:flex">
+                {selectedFile && <Attachment file={selectedFile} deleteAttachment= {()=> setSelectedFile(undefined)}/>}
                 <button
                     onClick={() => onFileButtonClick()}
                     className={'inline-flex mr-2 items-center justify-center rounded-full h-8 w-8 transition duration-200 ease-in-out text-white  focus:outline-none bg-yellow-400 hover:bg-yellow-500'}

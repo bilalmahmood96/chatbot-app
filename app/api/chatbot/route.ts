@@ -1,5 +1,5 @@
 import { getAccessToken } from "@/app/services/auth"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -19,9 +19,10 @@ export async function POST(request: NextRequest ) {
       });
       return NextResponse.json(response.data);
   }
-  catch(error){
+  catch(error: any){
     console.log('error: ',error)
-    throw error
+    return NextResponse.json({data: error.response.status});
   }
+    
   
 }
