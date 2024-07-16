@@ -6,7 +6,7 @@ export async function POST(request: NextRequest ) {
     const file = data.get("file") as File;
     try{
         const gcpStorage = GCPStorage()
-        const bucket = gcpStorage.bucket(`${process.env.GCP_BUCKET}`);
+        const bucket = gcpStorage.bucket(`${process.env.NEXT_PUBLIC_GCP_BUCKET}`);
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
