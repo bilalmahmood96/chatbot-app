@@ -1,14 +1,64 @@
 import { SenderType } from "@/app/enums/sender.type";
 import { IChat } from "@/app/models/chat.interface";
-import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
+import axios from "axios";
+import Image from "next/image";
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 
-export default function InputBox(props: {sendMessage: (message: IChat)=> void}){
-    const { sendMessage } = props
+type InputBoxPropsType ={
+    sendMessage: (message: IChat)=> void
+    selectedFile: File | undefined
+    setSelectedFile: Dispatch<SetStateAction<File | undefined>>
+}
+
+export default function InputBox(props: InputBoxPropsType){
+    const { sendMessage, setSelectedFile, selectedFile } = props
+    const [userInput, setUserInput] = useState<string>('')
+    const elementRef = useRef<HTMLInputElement>(null);
     
-    function handleKeyDown(event: any){
-        if (event.key === 'Enter') {
-            sendMessage({senderType: SenderType.User, message: event?.target?.value ?? ''})
+    async function handleKeyDown(event: any){
+        if (event.key === 'Enter' && userInput.length > 0) {
+            const isFileUploaded = await uploadFile(selectedFile as File)
+            sendMessage({
+                senderType: SenderType.User, 
+                message: userInput, 
+                fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : '' 
+            })
+            resetState()
         }
+    }
+
+    function onFileButtonClick() {
+        if(elementRef.current)
+            elementRef?.current.click();
+    };
+
+    function onChangeFile(event:  ChangeEvent<HTMLInputElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        if(event?.target?.files){
+            const file = event?.target?.files[0] as File ?? undefined;
+            setSelectedFile(file);
+        } 
+    }
+
+    function resetState(){
+        setUserInput('')
+        setSelectedFile(undefined)
+    }
+
+    function getFileUri(fileName: string){
+       return `gs://synsugar-chatbot-storage/${fileName.replaceAll(' ','-').toLowerCase()}`
+    }
+
+    async function uploadFile(file: File){
+        if(file !== undefined){
+            const formData = new FormData();
+            formData.append("file", file);
+            const fileUpdateResponse = await axios.post("/api/storage", formData, {headers: { "Content-type": "multipart/form-data" }});
+            return fileUpdateResponse
+        }
+        return false
+        
     }
 
     return(
@@ -17,19 +67,45 @@ export default function InputBox(props: {sendMessage: (message: IChat)=> void}){
             <input 
                 type="text" 
                 placeholder="Say something..." 
+                onChange={(event) => setUserInput(event?.target?.value ?? '')}
                 onKeyDown={handleKeyDown}
-                autoComplete="off" autoFocus={true}
+                autoComplete="off" 
+                autoFocus={true}
+                value={userInput}
                 className="text-md w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-16 bg-gray-100 border-2 border-gray-200 focus:border-blue-500 rounded-full py-2" 
             />
             <div className="absolute right-2 items-center inset-y-0 hidden sm:flex">
-                <button 
-                    type="button" 
-                    className="inline-flex items-center justify-center rounded-full h-8 w-8 transition duration-200 ease-in-out text-white bg-blue-500 hover:bg-blue-600 focus:outline-none" 
+                <button
+                    onClick={() => onFileButtonClick()}
+                    className={'inline-flex mr-2 items-center justify-center rounded-full h-8 w-8 transition duration-200 ease-in-out text-white  focus:outline-none bg-yellow-400 hover:bg-yellow-500'}
+                >
+                    <Image src='/images/file.png' height={20} width={20} alt="file upload"/>
+                </button>
+                <button
+                    onClick={async ()=> {
+                        const isFileUploaded = await uploadFile(selectedFile as File)
+                        sendMessage({
+                            senderType: SenderType.User, 
+                            message: userInput, 
+                            fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : '' 
+                        })
+                        resetState()
+                    }}
+                    disabled= {userInput.length === 0}
+                    className={[userInput.length === 0 ? 'bg-gray-400 cursor-not-allowed': 'bg-blue-500 hover:bg-blue-60 cursor-pointer', 'inline-flex items-center justify-center rounded-full h-8 w-8 transition duration-200 ease-in-out text-white  focus:outline-none'].join(' ')}
                     >
-                    <i className="mdi mdi-arrow-right text-xl leading-none"></i>
+                    <Image src='/images/right-arrow.png' height={26} width={26} alt="left-arrow"/>
                 </button>
             </div>
         </div>
+        <input 
+            type='file' 
+            id='file' 
+            ref={elementRef} 
+            className="hidden" 
+            accept=".pdf" 
+            onChange={(event) => onChangeFile(event)}
+        />
     </div>
     )
 }
