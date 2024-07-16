@@ -71,7 +71,7 @@ export default function InputBox(props: InputBoxPropsType){
                     onClick={() => onFileButtonClick()}
                     className={'inline-flex mr-2 items-center justify-center rounded-full h-8 w-8 transition duration-200 ease-in-out text-white  focus:outline-none bg-yellow-400 hover:bg-yellow-500'}
                 >
-                    <Image src='/images/file.png' height={20} width={20} alt="file upload"/>
+                    <Image src='/images/file.png' height={24} width={24} alt="file upload"/>
                 </button>
                 <button
                     onClick={async ()=> {

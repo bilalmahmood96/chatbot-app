@@ -7,25 +7,31 @@ type MessagePropsType = {
     isFileAttached?: boolean
 }
 
+function transformMessageText(messageContent: string){
+    const removeMultipleAsteriskContent =  messageContent.split("** * **").join("<br/><br/>");
+    const removeDoubleAsteriskContent = removeMultipleAsteriskContent.split("**").join("<br />");
+    const removeAsteriskContent = removeDoubleAsteriskContent.split("*").join("<br />");
+    return removeAsteriskContent
+}
+
 export default function Message(props: MessagePropsType){
     const {messageFrom, message, isFileAttached = false} = props
     return(
         <div className={['flex items-end', messageFrom  === SenderType.Bot ? '' : 'justify-end'].join(' ')}>
             <div 
                 className={[
-                    'flex flex-col space-y-2 text-md leading-tight max-w-lg mx-2', 
+                    'flex flex-col space-y-2 text-md leading-tight max-w-lg mx-2 text-sm', 
                     messageFrom  === SenderType.Bot ? 'order-2 items-start':'order-1 items-end'
                 ].join(' ')}
             >
-                <div className="flex flex-col cursor-">
+                <div className="flex flex-col cursor-default">
                     <span 
                         className={[
-                            'px-4 py-3 rounded-xl inline-block', 
+                            'px-4 py-3 rounded-xl inline-block ', 
                             messageFrom  === SenderType.Bot ? 'rounded-bl-none bg-gray-100 text-gray-600':'rounded-br-none bg-blue-500 text-white'
                         ].join(' ')}
-                    >
-                        {message}
-                    </span>
+                        dangerouslySetInnerHTML={{__html: transformMessageText(message)}}
+                    />
                     
                     {isFileAttached && 
                         <span className="max-w-max text-gray-500 text-xs ml-auto mt-1">
