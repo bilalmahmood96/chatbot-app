@@ -17,7 +17,7 @@ export default function Message(props: MessagePropsType){
                     messageFrom  === SenderType.Bot ? 'order-2 items-start':'order-1 items-end'
                 ].join(' ')}
             >
-                <div>
+                <div className="flex flex-col cursor-">
                     <span 
                         className={[
                             'px-4 py-3 rounded-xl inline-block', 
@@ -26,7 +26,14 @@ export default function Message(props: MessagePropsType){
                     >
                         {message}
                     </span>
+                    
+                    {isFileAttached && 
+                        <span className="max-w-max text-gray-500 text-xs ml-auto mt-1">
+                            File Attached
+                        </span>
+                    }
                 </div>
+                
             </div>
             <Image 
                 height={28} width={28}

@@ -42,9 +42,11 @@ export default function Chat(){
         setIsLoading(true)
         const generatedContent = getChatContent(chat)
 
-        const response = await axios.post("/api/chatbot",{data: generatedContent}).catch((error)=>{
-            console.log('error: ',error)
-        }).finally(()=> setIsLoading(false));
+        const response = await axios.post("/api/chatbot",{data: generatedContent})
+            .catch((error)=>{
+                console.log('error: ',error)
+            })
+            .finally(()=> setIsLoading(false));
         return response
     }
 
@@ -65,14 +67,16 @@ export default function Chat(){
             <div 
                 className="flex flex-col space-y-4 p-3 overflow-y-auto will-change-scroll scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
                 <Message messageFrom={SenderType.Bot} message="Hello! How can I help you?"/>
-                {chat.map((content,index) =>
-                        <Message 
-                            messageFrom={content.senderType} 
-                            message={content.message} 
-                            key={index+content.senderType+content.message.slice(0,8)}
-                            isFileAttached = {selectedFile ? true : false}
+                {chat.map((content,index) => {
+                        return(<Message 
+                        messageFrom={content.senderType} 
+                        message={content.message} 
+                        key={index+content.senderType+content.message.slice(0,8)}
+                        isFileAttached = {content.fileUri && content?.fileUri?.length > 0 ? true : false}
 
-                        />
+                    />)
+                }
+                        
                         
                 )}
                 {isLoading && <BotTyping/>}
