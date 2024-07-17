@@ -44,7 +44,7 @@ export default function Message(props: MessagePropsType){
             <Image 
                 height={28} width={28}
                 alt={messageFrom  === SenderType.Bot ? 'bot' : 'user'}
-                src={ messageFrom  === SenderType.Bot ? '/images/robot.webp' : '/images/user.png'} 
+                src={ messageFrom  === SenderType.Bot ? '/images/robot-2.png' : '/images/user-1.png'} 
                 className={[messageFrom === SenderType.Bot ? 'order-1':'order-2'].join(' ')}
             />
         </div>

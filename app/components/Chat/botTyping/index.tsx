@@ -6,11 +6,11 @@ export default function BotTyping(){
                 <div className="flex items-end">
                     <div className="flex flex-col space-y-2 text-md leading-tight max-w-lg mx-2 order-2 items-start">
                         <Image 
-                            src="/images/chatbot-typing.gif" 
+                            src="/images/typing.gif" 
                             alt="..."
-                            height={26}
-                            width={38} 
-                            className='w-16'
+                            height={22}
+                            width={22} 
+                            className='w-10'
                         />   
                         
                         
@@ -18,7 +18,7 @@ export default function BotTyping(){
                     <Image 
                         height={28} width={28}
                         alt='bot' 
-                        src='/images/robot.webp'
+                        src='/images/robot-2.png'
                         className= 'order-1'
                     />
                 </div>
