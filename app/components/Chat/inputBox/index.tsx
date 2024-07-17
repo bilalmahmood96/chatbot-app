@@ -1,6 +1,6 @@
 import { SenderType } from "@/app/enums/sender.type";
 import { IChat } from "@/app/models/chat.interface";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Attachment from "../attachment";
@@ -23,7 +23,7 @@ export default function InputBox(props: InputBoxPropsType){
             sendMessage({
                 senderType: SenderType.User, 
                 message: userInput, 
-                fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : '' 
+                fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : undefined 
             })
             resetState()
         }
@@ -63,9 +63,9 @@ export default function InputBox(props: InputBoxPropsType){
                 autoComplete="off" 
                 autoFocus={true}
                 value={userInput}
-                className="text-md w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-16 bg-gray-100 border-2 border-gray-200 focus:border-blue-500 rounded-full py-2" 
+                className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-[8.4rem] lg:pr-[12rem] bg-gray-100 border-2 border-gray-200 focus:border-blue-500 rounded-full py-2" 
             />
-            <div className="absolute right-2 items-center inset-y-0 hidden sm:flex">
+            <div className="absolute right-2 items-center inset-y-0 self-center sm:flex">
                 {selectedFile && <Attachment file={selectedFile} deleteAttachment= {()=> setSelectedFile(undefined)}/>}
                 <button
                     onClick={() => onFileButtonClick()}
@@ -79,7 +79,7 @@ export default function InputBox(props: InputBoxPropsType){
                         sendMessage({
                             senderType: SenderType.User, 
                             message: userInput, 
-                            fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : '' 
+                            fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : undefined 
                         })
                         resetState()
                     }}
@@ -97,6 +97,10 @@ export default function InputBox(props: InputBoxPropsType){
             className="hidden" 
             accept=".pdf" 
             onChange={(event) => onChangeFile(event)}
+            onClick={(event: any)=> { 
+                //@ts-ignore
+                event.target.value = null
+           }}
         />
     </div>
     )

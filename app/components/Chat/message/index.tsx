@@ -34,7 +34,7 @@ export default function Message(props: MessagePropsType){
                     />
                     
                     {isFileAttached && 
-                        <span className="max-w-max text-gray-500 text-xs ml-auto mt-1">
+                        <span className="max-w-max text-gray-500 text-[0.60rem] ml-auto mt-1">
                             File Attached
                         </span>
                     }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
 
 type AttachmentPropsType = {
     deleteAttachment: Function

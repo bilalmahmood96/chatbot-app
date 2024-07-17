@@ -5,7 +5,7 @@ import { IChat } from "@/app/models/chat.interface";
 export function getChatContent(messageList: IChat[]){
   const chatContent = []
   for(const message of messageList){
-    const fileData =  message.fileUri !== '' ? {
+    const fileData =  message.fileUri !== undefined ? {
       "fileData": {
         "fileUri":  message.fileUri,
         "mimeType": 'application/pdf'
@@ -23,6 +23,7 @@ export function getChatContent(messageList: IChat[]){
         textPart 
       ]
     }
+    content.parts = content.parts.filter(part => part !== null)
     chatContent.push(content)
   }
  return chatContent[chatContent.length - 1]

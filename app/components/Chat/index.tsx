@@ -8,7 +8,6 @@ import { IChat } from "@/app/models/chat.interface";
 import axios, { AxiosResponse } from "axios";
 import BotTyping from "./botTyping";
 import { extractResponse, getChatContent } from "@/app/services/chatbot";
-import { error } from "console";
 
 export default function Chat(){
     const [chat, setChat] = useState<IChat[]>([])
@@ -60,24 +59,23 @@ export default function Chat(){
         return false
         
     }
-
-    
+ 
     return(
         <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen bg-white">
             <div 
                 className="flex flex-col space-y-4 p-3 overflow-y-auto will-change-scroll scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
                 <Message messageFrom={SenderType.Bot} message="Hello! How can I help you?"/>
                 {chat.map((content,index) => {
-                        return(<Message 
-                        messageFrom={content.senderType} 
-                        message={content.message} 
-                        key={index+content.senderType+content.message.slice(0,8)}
-                        isFileAttached = {content.fileUri && content?.fileUri?.length > 0 ? true : false}
-
-                    />)
-                }
-                        
-                        
+                        return(
+                            <Message 
+                                messageFrom={content.senderType} 
+                                message={content.message} 
+                                key={index+content.senderType+content.message.slice(0,8)}
+                                isFileAttached = {content.fileUri && content?.fileUri?.length > 0 ? true : false}
+                            />
+                        )
+                    }
+                         
                 )}
                 {isLoading && <BotTyping/>}
                 <div ref={elementRef} />
