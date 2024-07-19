@@ -110,7 +110,7 @@ export default function InputBox(props: InputBoxPropsType){
                     id='file' 
                     ref={elementRef} 
                     className="hidden" 
-                    accept=".pdf,.png" 
+                    accept=".pdf,.png,.jpg,.jpeg" 
                     onChange={(event) => onChangeFile(event)}
                     onClick={(event: any)=> { 
                         //@ts-ignore
