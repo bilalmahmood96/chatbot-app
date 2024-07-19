@@ -41,7 +41,8 @@ export async function getChatContent(messageList: IChat[]){
     content.parts = content.parts.filter(part => part !== null)
     chatContent.push(content)
   }
- return chatContent[chatContent.length - 1]
+
+ return chatContent
 }
 
 export function extractResponse(response: any){
