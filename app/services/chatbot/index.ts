@@ -67,6 +67,9 @@ function errorMessage(statusCode: number){
     case 503:
       errorMessage = ChatBotExceptions.UNAVAILABLE
     break;
+    case 413:
+      errorMessage = ChatBotExceptions.ENTITY_TOO_LARGE
+    break;
     default:
       errorMessage = ChatBotExceptions.DEFAULT_ERROR
   }
