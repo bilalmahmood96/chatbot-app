@@ -1,29 +1,29 @@
+
 import { SenderType } from "@/app/enums/sender.type";
 import { IChat } from "@/app/models/chat.interface";
-import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Attachment from "../attachment";
+
 
 type InputBoxPropsType ={
     sendMessage: (message: IChat)=> void
     selectedFile: File | undefined
     setSelectedFile: Dispatch<SetStateAction<File | undefined>>
-    uploadFile: (file: File) => Promise<boolean | AxiosResponse<any, any>>
+    
 }
 
 export default function InputBox(props: InputBoxPropsType){
-    const { sendMessage, setSelectedFile, selectedFile, uploadFile } = props
+    const { sendMessage, setSelectedFile, selectedFile } = props
     const [userInput, setUserInput] = useState<string>('')
     const elementRef = useRef<HTMLInputElement>(null);
     
     async function handleKeyDown(event: any){
         if (event.key === 'Enter' && userInput.length > 0) {
-            const isFileUploaded = await uploadFile(selectedFile as File)
             sendMessage({
                 senderType: SenderType.User, 
                 message: userInput, 
-                fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : undefined 
+                file: selectedFile
             })
             resetState()
         }
@@ -34,22 +34,19 @@ export default function InputBox(props: InputBoxPropsType){
             elementRef?.current.click();
     };
 
-    function onChangeFile(event:  ChangeEvent<HTMLInputElement>) {
+    async function onChangeFile(event:  ChangeEvent<HTMLInputElement>) {
         event.stopPropagation();
         event.preventDefault();
         if(event?.target?.files){
             const file = event?.target?.files[0] as File ?? undefined;
             setSelectedFile(file);
+        
         } 
     }
 
     function resetState(){
         setUserInput('')
         setSelectedFile(undefined)
-    }
-
-    function getFileUri(fileName: string){
-       return `gs://synsugar-chatbot-storage/${fileName.replaceAll(' ','-').toLowerCase()}`
     }
 
     return(
@@ -75,11 +72,10 @@ export default function InputBox(props: InputBoxPropsType){
                 </button>
                 <button
                     onClick={async ()=> {
-                        const isFileUploaded = await uploadFile(selectedFile as File)
                         sendMessage({
                             senderType: SenderType.User, 
-                            message: userInput, 
-                            fileUri: isFileUploaded ? `${getFileUri(selectedFile?.name ?? '') }` : undefined 
+                            message: userInput,
+                            file: selectedFile
                         })
                         resetState()
                     }}
@@ -95,7 +91,7 @@ export default function InputBox(props: InputBoxPropsType){
             id='file' 
             ref={elementRef} 
             className="hidden" 
-            accept=".pdf" 
+            accept=".pdf,.png" 
             onChange={(event) => onChangeFile(event)}
             onClick={(event: any)=> { 
                 //@ts-ignore

@@ -5,7 +5,7 @@ import Message from "./message";
 import InputBox from "./inputBox";
 import { useEffect, useRef, useState } from "react";
 import { IChat } from "@/app/models/chat.interface";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import BotTyping from "./botTyping";
 import { extractResponse, getChatContent } from "@/app/services/chatbot";
 
@@ -39,7 +39,7 @@ export default function Chat(){
 
     async function fetchBotResponse(){
         setIsLoading(true)
-        const generatedContent = getChatContent(chat)
+        const generatedContent = await getChatContent(chat)
 
         const response = await axios.post("/api/chatbot",{data: generatedContent})
             .catch((error)=>{
@@ -47,17 +47,6 @@ export default function Chat(){
             })
             .finally(()=> setIsLoading(false));
         return response
-    }
-
-    async function uploadFile(file: File) : Promise<false | AxiosResponse<any, any>>{
-        if(file !== undefined){
-            const formData = new FormData();
-            formData.append("file", file);
-            const fileUpdateResponse = await axios.post("/api/storage", formData, {headers: { "Content-type": "multipart/form-data" }});
-            return fileUpdateResponse
-        }
-        return false
-        
     }
  
     return(
@@ -71,7 +60,7 @@ export default function Chat(){
                                 messageFrom={content.senderType} 
                                 message={content.message} 
                                 key={index+content.senderType+content.message.slice(0,8)}
-                                isFileAttached = {content.fileUri && content?.fileUri?.length > 0 ? true : false}
+                                isFileAttached = {content.file ? true : false}
                             />
                         )
                     }
@@ -85,7 +74,6 @@ export default function Chat(){
                 sendMessage = {updateChatArray}
                 setSelectedFile = {setSelectedFile}
                 selectedFile = {selectedFile}
-                uploadFile = {uploadFile}
             />
         </div>
     )

@@ -24,5 +24,4 @@ export async function POST(request: NextRequest ) {
     return NextResponse.json({data: error.response.status});
   }
     
-  
 }

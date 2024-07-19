@@ -2,25 +2,40 @@ import { ChatBotExceptions } from "@/app/enums/chatbot.exception";
 import { SenderType } from "@/app/enums/sender.type";
 import { IChat } from "@/app/models/chat.interface";
 
-export function getChatContent(messageList: IChat[]){
+const FiletoBase64 = (file: Blob) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    let fileResult = reader?.result?.toString().split(/^data:(.*,)?/, ) ?? [''];
+    const mimeType = fileResult[1]?.split(';')[0]
+    const encoded = fileResult[2]
+    resolve({
+      mimeType: mimeType,
+        data: encoded
+    });
+  };
+  reader.onerror = reject;
+});
+
+
+
+export async function getChatContent(messageList: IChat[]){
   const chatContent = []
   for(const message of messageList){
-    const fileData =  message.fileUri !== undefined ? {
-      "fileData": {
-        "fileUri":  message.fileUri,
-        "mimeType": 'application/pdf'
-      } 
-    } : null
 
     const textPart = {
       'text': `${message.message}`
     }
 
+    const document = message.file !== undefined ?  {
+      inlineData: await FiletoBase64(message.file)
+  } : null
+
     const content = {
       "role": message.senderType === SenderType.User ? "user" : 'model',
       "parts": [
-        fileData,
-        textPart 
+        textPart,
+        document 
       ]
     }
     content.parts = content.parts.filter(part => part !== null)
