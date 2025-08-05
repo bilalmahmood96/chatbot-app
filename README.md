@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧠 Chatbot App
 
-## Getting Started
+A simple AI-powered chatbot interface built using **Next.js**, **Google Vertex AI**, and **Tailwind CSS**. This app demonstrates the integration of a large language model (LLM) API with a modern web UI, offering a clean and interactive chat experience.
 
-First, run the development server:
+---
+
+## 🚀 Tech Stack
+
+- **Next.js** – React framework for building server-rendered and statically generated web applications  
+- **Tailwind CSS** – Utility-first CSS framework for responsive UI design  
+- **Google Vertex AI (PaLM)** – Large language model API used for generating chat responses  
+- **TypeScript** – Type-safe development  
+- **ESLint & Prettier** – Code linting and formatting
+
+---
+
+## 📦 Features
+
+- Ask natural language questions and get intelligent responses  
+- Uses Vertex AI PaLM model via REST API  
+- Simple and modern UI built with Tailwind CSS  
+- Environment variables support for API key management  
+- Responsive layout suitable for desktop and mobile
+
+---
+
+## 🔧 Getting Started
+
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/bilalmahmood96/chatbot-app.git
+cd chatbot-app
+
+
+2. Install dependencies
+
+Make sure you have Node.js (18+) installed.
+
+npm install
+# or
+yarn install
+
+
+3. Set up environment variables
+
+Create a .env.local file in the root directory and add your Google Vertex AI API key:
+
+NEXT_PUBLIC_GCP_CREDENTIALS
+NEXT_PUBLIC_GCP_CLIENT_EMAIL
+
+You can obtain the API key from Google Cloud Vertex AI.
+
+
+4. Run the development server
+
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open your browser at http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+📁 Project Structure
+python
+Copy
+Edit
+chatbot-app/
+├── pages/
+│   └── index.tsx        # Main chat UI
+├── components/
+│   └── Chat.tsx         # Chat component (input/output logic)
+├── utils/
+│   └── chat.ts          # Vertex AI API request logic
+├── styles/
+│   └── globals.css      # Tailwind base styles
+├── .env.local           # API key for Vertex AI
+├── next.config.js       # Next.js configuration
+🧪 Example Usage
+Ask: “Tell me a fun fact about space.”
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Response: “Did you know that one day on Venus is longer than its year?”
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
